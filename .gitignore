@@ -1,0 +1,26 @@
+# Rust
+target/
+
+# Node
+node_modules/
+dist/
+
+# Локальные файлы
+*.log
+*.exe
+*.exe.new
+*.exe.update.bat
+
+# Данные бэкенда
+backend/.env
+backend/files/
+
+# IDE / ОС
+.idea/
+.vscode/
+Thumbs.db
+
+# Gradle локальный кэш
+.gradle/
+
+fabric-mod/build/

@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-quasar-bg text-zinc-200 antialiased;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  input {
+    @apply bg-quasar-surface border border-quasar-border rounded-lg px-4 py-2.5 text-sm
+           text-zinc-100 placeholder-zinc-500 outline-none
+           focus:border-quasar-accent focus:shadow-glow-sm transition;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-quasar-accent hover:bg-quasar-accent-hover text-white font-semibold rounded-lg
+           px-5 py-2.5 text-sm shadow-glow-sm hover:shadow-glow transition
+           disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none;
+  }
+
+  .btn-ghost {
+    @apply text-zinc-400 hover:text-quasar-accent text-sm rounded-lg px-4 py-2
+           border border-transparent hover:border-quasar-border transition;
+  }
+
+  .card {
+    @apply bg-quasar-surface border border-quasar-border rounded-xl;
+  }
+
+  .error-text {
+    @apply text-red-400 text-xs mt-2;
+  }
+
+  /* Ползунок ОЗУ: полоса и thumb в стиле лаунчера, без подписей */
+  .quasar-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 16px;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+  }
+  .quasar-slider::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 9999px;
+    background: #232336; /* quasar-border */
+  }
+  .quasar-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #8b5cf6; /* quasar-accent */
+    margin-top: -5.5px; /* центрирование thumb на треке: (3 - 14) / 2 */
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.55);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .quasar-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.8);
+  }
+  .quasar-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    border: none;
+    cursor: pointer;
+  }
+  .quasar-slider::-moz-range-track {
+    height: 3px;
+    border-radius: 9999px;
+    background: #232336;
+  }
+}
+
+/* Скроллбар под тему */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #12121a; }
+::-webkit-scrollbar-thumb { background: #2a2a40; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }

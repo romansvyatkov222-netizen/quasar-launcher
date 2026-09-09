@@ -1,0 +1,29 @@
+plugins {
+    id 'fabric-loom' version '1.14-SNAPSHOT'
+    id 'java'
+}
+
+version = '0.1.0'
+group = 'dev.quasar'
+
+base { archivesName = 'quasar-skinfix' }
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.fabricmc.net/' }
+}
+
+dependencies {
+    minecraft 'com.mojang:minecraft:1.21.11'
+    mappings 'net.fabricmc:yarn:1.21.11+build.6:v2'
+    modImplementation 'net.fabricmc:fabric-loader:0.19.5'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+processResources {
+    // fabric.mod.json правим руками (версия захардкожена); expand ломает UTF-8
+}

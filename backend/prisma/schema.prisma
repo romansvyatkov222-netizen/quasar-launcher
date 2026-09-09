@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ModelType {
+  SLIM
+  CLASSIC
+}
+
+enum ModType {
+  REQUIRED
+  OPTIONAL
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  username     String    @unique @db.VarChar(16)
+  passwordHash String    @map("password_hash")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  sessions     Session[]
+  skin         Skin?
+  yggTokens    YggToken[]
+
+  @@map("users")
+}
+
+model Session {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @unique @map("user_id") @db.Uuid
+  token      String   @unique @db.Text
+  expiresAt  DateTime @map("expires_at")
+  clientHash String   @map("client_hash")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Skin {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @unique @map("user_id") @db.Uuid
+  imageData   Bytes     @map("image_data")
+  textureHash String?   @map("texture_hash") @db.VarChar(64)
+  resolution  Int
+  modelType   ModelType @default(CLASSIC) @map("model_type")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([textureHash])
+  @@map("skins")
+}
+
+// Yggdrasil accessToken для игровой сессии (authlib-injector).
+model YggToken {
+  accessToken String   @id @map("access_token") @db.Text
+  userId      String   @map("user_id") @db.Uuid
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("ygg_tokens")
+}
+
+// Настройки сервера; RSA-ключи подписи переживают рестарты
+// (смена ключей инвалидирует кэши текстур и chat signing).
+model Setting {
+  key       String   @id @db.VarChar(64)
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model ModManifest {
+  id          String  @id @default(uuid()) @db.Uuid
+  modType     ModType @map("mod_type")
+  name        String  @db.VarChar(64)
+  description String  @db.VarChar(512)
+  githubUrl   String  @map("github_url") @db.Text
+  downloadUrl String? @map("download_url") @db.Text
+  fileName    String  @unique @map("file_name") @db.VarChar(128)
+  sha256Hash  String  @map("sha256_hash") @db.VarChar(64)
+
+  @@map("mod_manifest")
+}

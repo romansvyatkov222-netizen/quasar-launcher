@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "quasar-skinfix",
+  "version": "0.1.0",
+  "name": "Quasar SkinFix",
+  "description": "Поддержка HD-скинов (128/256) в ванильном клиенте 1.21.11. Обязателен для работы скинов Quasar.",
+  "authors": ["Quasar"],
+  "license": "MIT",
+  "environment": "client",
+  "mixins": ["quasar-mod.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "minecraft": "~1.21.11"
+  }
+}

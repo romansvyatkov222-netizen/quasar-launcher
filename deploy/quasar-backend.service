@@ -1,0 +1,16 @@
+[Unit]
+Description=Quasar Launcher Backend
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/quasar-backend
+EnvironmentFile=/home/quasar-backend/.env
+ExecStart=/usr/bin/node dist/src/index.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
