@@ -79,7 +79,7 @@ export default function Sidebar({ screen, onNavigate }: Props) {
               border transition-all duration-200 ease-out
               ${
                 screen === item.id
-                  ? "bg-quasar-accent-soft text-violet-300 border-quasar-accent/50 shadow-glow-sm"
+                  ? "text-violet-300 border-transparent shadow-glow-sm"
                   : "text-zinc-500 border-transparent hover:text-zinc-200 hover:bg-white/5 hover:border-quasar-border hover:translate-x-1"
               }`}
           >

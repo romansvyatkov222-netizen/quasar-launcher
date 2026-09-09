@@ -85,7 +85,21 @@ export default function ModSelectScreen({ onContinue, onLogout }: Props) {
     <div className="flex h-full flex-col p-6">
       <header className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-normal text-zinc-500">Выбор модов</h1>
-        <button onClick={onLogout} className="btn-ghost">Выйти</button>
+        <button
+          onClick={onLogout}
+          className="grid place-items-center w-9 h-9 rounded-lg border border-transparent
+            text-zinc-400 hover:text-red-400 hover:border-red-500/40 transition"
+          aria-label="Выйти"
+        >
+          <svg
+            width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </button>
       </header>
 
       <div className="flex-1 overflow-y-auto pr-1 space-y-3">

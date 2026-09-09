@@ -1,6 +1,6 @@
 [package]
 name = "quasar-launcher"
-version = "0.2.0"
+version = "0.3.0"
 description = "Quasar Launcher"
 edition = "2021"
 
