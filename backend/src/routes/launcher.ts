@@ -19,6 +19,7 @@ interface GithubRelease {
   tag_name?: string;
   body?: string | null;
   assets?: {
+    id?: number;
     name?: string;
     size?: number;
     browser_download_url?: string;
@@ -79,20 +80,23 @@ launcherRouter.get(
   asyncRoute(async (_req, res) => {
     const release = await fetchLatestRelease();
     const asset = release?.assets?.find((a) => a.name === ASSET_NAME);
-    if (!asset?.browser_download_url) {
+    if (!asset?.id) {
       throw new HttpError(404, 'NO_UPDATE', 'Обновление не найдено');
     }
 
-    // Адрес конкретного asset: browser_download_url приватного репо
-    // требует токен — качаем сами и стримим клиенту.
-    const upstream = await fetch(asset.browser_download_url, { headers: githubHeaders() });
+    // browser_download_url приватного репо отдаёт HTML-страницу авторизации,
+    // поэтому качаем через API asset'а с Accept: application/octet-stream
+    const upstream = await fetch(
+      `${GITHUB_API}/repos/${env.GITHUB_REPO}/releases/assets/${asset.id}`,
+      { headers: { ...githubHeaders(), Accept: 'application/octet-stream' }, redirect: 'follow' },
+    );
     if (!upstream.ok || !upstream.body) {
       throw new HttpError(502, 'GITHUB_ERROR', `Не удалось скачать релиз (${upstream.status})`);
     }
 
     res.status(200);
     res.setHeader('Content-Type', 'application/octet-stream');
-    if (asset.size) res.setHeader('Content-Length', String(asset.size));
+    res.setHeader('Content-Length', String(asset.size ?? upstream.headers.get('content-length') ?? 0));
     res.setHeader('Content-Disposition', `attachment; filename="${ASSET_NAME}"`);
 
     const reader = (upstream.body as unknown as {

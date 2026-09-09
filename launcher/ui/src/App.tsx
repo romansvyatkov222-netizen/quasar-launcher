@@ -89,7 +89,6 @@ export default function App() {
           latest={update.latest}
           current={update.current}
           notes={update.notes}
-          onClose={() => setUpdate(null)}
         />
       )}
     </div>

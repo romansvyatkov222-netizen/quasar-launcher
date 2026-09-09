@@ -5,16 +5,17 @@ interface Props {
   latest: string;
   current: string;
   notes: string;
-  onClose: () => void;
 }
 
 /**
- * Модалка обновления: предложение новой версии -> прогресс скачивания ->
- * замена exe и перезапуск (cmd_finish_update). Закрыть можно только кнопкой.
+ * Модалка обновления (обязательная): предложение новой версии -> прогресс
+ * скачивания -> замена exe и перезапуск (cmd_finish_update).
+ * Закрыть без обновления нельзя — кнопки «Позже» нет.
  */
-export default function UpdateModal({ latest, current, notes, onClose }: Props) {
+export default function UpdateModal({ latest, current, notes }: Props) {
   const [phase, setPhase] = useState<"offer" | "downloading">("offer");
   const [error, setError] = useState<string | null>(null);
+  const [percent, setPercent] = useState(0);
 
   useEffect(() => {
     if (phase !== "downloading") return;
@@ -29,8 +30,6 @@ export default function UpdateModal({ latest, current, notes, onClose }: Props) 
       sub.then((f) => f());
     };
   }, [phase]);
-
-  const [percent, setPercent] = useState(0);
 
   async function applyUpdate() {
     setError(null);
@@ -50,11 +49,14 @@ export default function UpdateModal({ latest, current, notes, onClose }: Props) 
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/70">
       <div className="card w-[380px] p-7 bg-quasar-surface shadow-glow-sm">
         <h3 className="text-base font-semibold text-zinc-100">
-          Доступно обновление
+          Требуется обновление
         </h3>
         <p className="text-sm text-zinc-400 mt-2">
           Версия <span className="text-violet-300">{latest}</span>{" "}
           <span className="text-zinc-600">(у тебя {current})</span>
+        </p>
+        <p className="text-xs text-zinc-500 mt-2">
+          Чтобы продолжить, установи обновление — это займёт меньше минуты.
         </p>
 
         {notes.trim() && phase === "offer" && (
@@ -83,20 +85,13 @@ export default function UpdateModal({ latest, current, notes, onClose }: Props) 
 
         {error && <p className="error-text">{error}</p>}
 
-        <div className="flex gap-3 mt-6">
-          {phase === "offer" && (
-            <button onClick={onClose} className="btn-ghost flex-1">
-              Позже
-            </button>
-          )}
-          <button
-            onClick={applyUpdate}
-            className="btn-primary flex-1"
-            disabled={phase === "downloading"}
-          >
-            {phase === "downloading" ? "..." : "Обновить"}
-          </button>
-        </div>
+        <button
+          onClick={applyUpdate}
+          className="btn-primary w-full mt-6"
+          disabled={phase === "downloading"}
+        >
+          {phase === "downloading" ? "Скачивание..." : "Обновить"}
+        </button>
       </div>
     </div>
   );
