@@ -347,6 +347,7 @@ fn main() {
             if let Some(session) = state::load_session(&handle) {
                 app.state::<AppState>().set_session(Some(session));
             }
+            updater::cleanup_update_leftovers(); // .old / .new / update.bat от прошлой само-замены
             Ok(())
         })
         .manage(AppState::new())

@@ -135,8 +135,14 @@ pub async fn cmd_apply_update(window: tauri::WebviewWindow) -> Result<(), String
     Ok(())
 }
 
-/// Замена exe через update.bat (работающий exe нельзя перезаписать):
-/// wait 2с -> del старый -> ren новый -> start нового -> app.exit(0).
+/// Замена exe без bat-скриптов: работающий exe ПЕРЕИМЕНОВЫВАЕТСЯ в .old
+/// (Windows это разрешает), новый файл встаёт на его место, запускается
+/// новая версия; .old чистится при следующем старте.
+///
+/// Прежний вариант через cmd/bat ломался на кириллице в пути: cmd читает
+/// bat в OEM-кодировке (866), а файл писался в UTF-8 -> del/move не находили
+/// файл («не удаётся найти лаунчер»). std::fs::rename использует
+/// Unicode-WinAPI и работает с любыми путями.
 #[tauri::command]
 pub fn cmd_finish_update(app: AppHandle) -> Result<(), String> {
     let dest = exe_path().map_err(err_s)?;
@@ -144,21 +150,25 @@ pub fn cmd_finish_update(app: AppHandle) -> Result<(), String> {
     if !tmp.exists() {
         return Err("Обновление не скачано".into());
     }
+    let old = dest.with_extension("exe.old");
+    if old.exists() {
+        let _ = std::fs::remove_file(&old); // хвост прошлой попытки
+    }
 
-    let bat = dest.with_extension("exe.update.bat");
-    let script = format!(
-        "@echo off\r\ntimeout /t 2 /nobreak >nul\r\ndel /f /q \"{old}\"\r\nmove /y \"{new}\" \"{old}\"\r\nstart \"\" \"{old}\"\r\ndel /f /q \"%~f0\"\r\n",
-        old = dest.display(),
-        new = tmp.display(),
-    );
-    std::fs::write(&bat, script).map_err(err_s)?;
+    // 1. работающий exe уходит в .old
+    std::fs::rename(&dest, &old).map_err(err_s)?;
+    // 2. новый встаёт на его место; при неудаче возвращаем старый обратно
+    if let Err(e) = std::fs::rename(&tmp, &dest) {
+        let _ = std::fs::rename(&old, &dest);
+        return Err(format!("Не удалось установить обновление: {e:#}"));
+    }
 
+    // 3. запуск уже новой версии (пути Unicode-safe)
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
         const CREATE_NO_WINDOW: u32 = 0x0800_0000;
-        std::process::Command::new("cmd")
-            .args(["/c", &bat.display().to_string()])
+        std::process::Command::new(&dest)
             .creation_flags(CREATE_NO_WINDOW)
             .spawn()
             .map_err(err_s)?;
@@ -167,6 +177,13 @@ pub fn cmd_finish_update(app: AppHandle) -> Result<(), String> {
     app.exit(0);
     #[allow(unreachable_code)]
     Ok(())
+}
+
+/// Чистка хвостов прошлых обновлений (.old / .new / update.bat) при старте.
+pub fn cleanup_update_leftovers() {
+    let Ok(exe) = exe_path() else { return };
+    let _ = std::fs::remove_file(exe.with_extension("exe.old"));
+    let _ = std::fs::remove_file(exe.with_extension("exe.update.bat"));
 }
 
 fn err_s(e: impl std::fmt::Display) -> String {

@@ -11,22 +11,18 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo
-        uses: actions/cache@v4
+        uses: Swatinem/rust-cache@v2
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            launcher/src-tauri/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('launcher/src-tauri/Cargo.lock') }}
+          workspaces: launcher/src-tauri
 
       - name: Build UI
         working-directory: launcher/ui
