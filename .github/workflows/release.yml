@@ -33,7 +33,9 @@ jobs:
 
       - name: Build launcher
         working-directory: launcher/src-tauri
-        run: cargo build --release
+        # custom-protocol обязателен: без него exe грузит devUrl (localhost:5173)
+        # и падает с ERR_CONNECTION_REFUSED
+        run: cargo build --release --features tauri/custom-protocol
 
       - name: Prepare artifact
         shell: pwsh

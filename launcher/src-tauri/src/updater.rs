@@ -183,6 +183,7 @@ pub fn cmd_finish_update(app: AppHandle) -> Result<(), String> {
 pub fn cleanup_update_leftovers() {
     let Ok(exe) = exe_path() else { return };
     let _ = std::fs::remove_file(exe.with_extension("exe.old"));
+    let _ = std::fs::remove_file(exe.with_extension("exe.new")); // хвост прерванной загрузки
     let _ = std::fs::remove_file(exe.with_extension("exe.update.bat"));
 }
 
