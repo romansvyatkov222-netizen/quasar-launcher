@@ -3,7 +3,6 @@ import { api, LaunchResult, User, VerifyReport } from "../api";
 import { loadSavedRam } from "../ram";
 import SkinAvatar from "./SkinAvatar";
 import GameRunningModal from "./GameRunningModal";
-import VoxelBackground from "./VoxelBackground";
 
 interface Props {
   user: User;
@@ -83,12 +82,7 @@ export default function LauncherScreen({ user, onLogout }: Props) {
 
   return (
     <div className="flex h-full flex-col relative">
-      {/* Minecraft-остров на three.js, затемнён для читаемости */}
-      <VoxelBackground />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(rgba(10,10,15,0.45), rgba(10,10,15,0.65))" }}
-      />
+      {/* Фон пока пустой (тёмная тема); лёгкий акцент свечения слева сверху */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%)] pointer-events-none" />
 
       {/* Шапка: ник + аватар + иконка выхода (навигация — в боковом меню) */}
