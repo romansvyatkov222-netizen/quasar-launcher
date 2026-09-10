@@ -131,14 +131,6 @@ export default function ModSelectScreen({ onContinue, onLogout }: Props) {
               <p className="text-sm font-medium text-zinc-100">{m.name}</p>
               <p className="text-xs text-zinc-500 mt-0.5">{m.description}</p>
             </div>
-            <a
-              href={m.githubUrl}
-              onClick={(e) => e.preventDefault()}
-              className="text-[11px] text-quasar-accent hover:underline"
-              title={m.githubUrl}
-            >
-              GitHub
-            </a>
           </div>
         ))}
       </div>

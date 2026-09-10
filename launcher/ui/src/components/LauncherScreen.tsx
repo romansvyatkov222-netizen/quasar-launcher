@@ -3,6 +3,7 @@ import { api, LaunchResult, User, VerifyReport } from "../api";
 import { loadSavedRam } from "../ram";
 import SkinAvatar from "./SkinAvatar";
 import GameRunningModal from "./GameRunningModal";
+import nightBg from "../assets/night-bg.png";
 
 interface Props {
   user: User;
@@ -82,6 +83,11 @@ export default function LauncherScreen({ user, onLogout }: Props) {
 
   return (
     <div className="flex h-full flex-col relative">
+      {/* Ночной фон из игры (вшит в exe), затемнён для читаемости UI */}
+      <div
+        className="absolute inset-0 bg-cover bg-center [image-rendering:pixelated] pointer-events-none"
+        style={{ backgroundImage: `linear-gradient(rgba(10,10,15,0.72), rgba(10,10,15,0.82)), url(${nightBg})` }}
+      />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%)] pointer-events-none" />
 
       {/* Шапка: ник + аватар + иконка выхода (навигация — в боковом меню) */}
