@@ -1,0 +1,20 @@
+{
+  "cols": 4,
+  "rows": 3,
+  "tile": 16,
+  "count": 12,
+  "blocks": {
+    "grass_block_side": 0,
+    "grass_block_top": 1,
+    "dirt": 2,
+    "stone": 3,
+    "oak_planks": 4,
+    "deepslate": 5,
+    "amethyst_block": 6,
+    "cobblestone": 7,
+    "glowstone": 8,
+    "mossy_cobblestone": 9,
+    "smooth_stone": 10,
+    "end_stone": 11
+  }
+}

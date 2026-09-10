@@ -63,11 +63,6 @@ export default function Sidebar({ screen, onNavigate }: Props) {
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>
-        {expanded && (
-          <span className="text-sm font-black tracking-widest bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
-            Меню
-          </span>
-        )}
       </button>
 
       <nav className="flex-1 py-2 space-y-1">

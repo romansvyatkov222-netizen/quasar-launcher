@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, LaunchResult, User, VerifyReport } from "../api";
 import { loadSavedRam } from "../ram";
 import SkinAvatar from "./SkinAvatar";
 import GameRunningModal from "./GameRunningModal";
-import nightBg from "../assets/night-bg.png";
+import VoxelBackground from "./VoxelBackground";
 
 interface Props {
   user: User;
@@ -83,10 +83,11 @@ export default function LauncherScreen({ user, onLogout }: Props) {
 
   return (
     <div className="flex h-full flex-col relative">
-      {/* Ночной фон из игры (вшит в exe), затемнён для читаемости UI */}
+      {/* Minecraft-остров на three.js, затемнён для читаемости */}
+      <VoxelBackground />
       <div
-        className="absolute inset-0 bg-cover bg-center [image-rendering:pixelated] pointer-events-none"
-        style={{ backgroundImage: `linear-gradient(rgba(10,10,15,0.72), rgba(10,10,15,0.82)), url(${nightBg})` }}
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "linear-gradient(rgba(10,10,15,0.45), rgba(10,10,15,0.65))" }}
       />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%)] pointer-events-none" />
 

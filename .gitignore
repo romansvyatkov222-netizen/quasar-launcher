@@ -24,3 +24,6 @@ Thumbs.db
 .gradle/
 
 fabric-mod/build/
+
+# Извлечённые текстуры игры (не коммитим, см. ui/scripts/gen-atlas.mjs)
+mc-textures/
